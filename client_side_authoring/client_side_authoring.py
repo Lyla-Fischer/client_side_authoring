@@ -12,13 +12,9 @@ class ClientSideAuthoringXBlock(XBlock):
     TO-DO: document what your XBlock does.
     """
 
-    # Fields are defined on the class.  You can access them in your code as
-    # self.<fieldname>.
-
-    # TO-DO: delete count, and define your own fields.
-    count = Integer(
-        default=0, scope=Scope.user_state,
-        help="A simple counter, to show something happening",
+    authored_html = String(
+        default=unicode(""), scope=Scope.content,
+        help="The author-provided HTML to be displayed to the students",
     )
 
     def resource_string(self, path):
@@ -26,43 +22,53 @@ class ClientSideAuthoringXBlock(XBlock):
         data = pkg_resources.resource_string(__name__, path)
         return data.decode("utf8")
 
-    # TO-DO: change this view to display your data your own way.
     def student_view(self, context=None):
         """
-        The primary view of the ClientSideAuthoringXBlock, shown to students
+        The primary view of the CustomHtmlXBlock, shown to students
         when viewing courses.
         """
-        html = self.resource_string("static/html/client_side_authoring.html")
-        frag = Fragment(html.format(self=self))
-        frag.add_css(self.resource_string("static/css/client_side_authoring.css"))
-        frag.add_javascript(self.resource_string("static/js/src/client_side_authoring.js"))
-        frag.initialize_js('ClientSideAuthoringXBlock')
+        # import pdb; pdb.set_trace()
+        frag = Fragment(self.authored_html)
+        frag.add_css(self.resource_string("static/css/custom_html.css"))
+        frag.add_javascript(
+            self.resource_string("static/js/src/custom_html.js"))
+        frag.initialize_js('CustomHtmlXBlock')
         return frag
 
-    # TO-DO: change this handler to perform your own actions.  You may need more
-    # than one handler, or you may not need any handlers at all.
-    @XBlock.json_handler
-    def increment_count(self, data, suffix=''):
+    def author_view(self, context=None):
         """
-        An example handler, which increments the data.
+        The authoring view of the CustomHtmlXBlock,
+        shown to authors when they are assembling a course
         """
-        # Just to show data coming in...
-        assert data['hello'] == 'world'
+        html = self.resource_string("static/html/custom_html_authoring.html")
+        frag = Fragment(html.format(self=self))
+        frag.add_content(self.authored_html)
 
-        self.count += 1
-        return {"count": self.count}
+        frag.add_css(self.resource_string("static/css/custom_html.css"))
+        frag.add_javascript(
+            self.resource_string("static/js/src/custom_html.js"))
+        frag.add_javascript(
+            self.resource_string("static/js/src/csrf_javascript.js"))
+        frag.add_javascript_url("//tinymce.cachefly.net/4.2/tinymce.min.js")
+        frag.initialize_js('CustomHtmlXBlock')
+        return frag
 
-    # TO-DO: change this to create the scenarios you'd like to see in the
-    # workbench while developing your XBlock.
+    @XBlock.handler
+    def save_html(self, data, suffix=''):
+        """
+        Saves the 'content' attribute of a form POST request for display as 
+        HTML as part of a webpage
+        """
+        self.authored_html = data.POST['content']
+
+        response = HTTPTemporaryRedirect()
+        response.location = data.referrer
+        return response
+
     @staticmethod
     def workbench_scenarios():
         """A canned scenario for display in the workbench."""
         return [
             ("ClientSideAuthoringXBlock",
-             """<vertical_demo>
-                <client_side_authoring/>
-                <client_side_authoring/>
-                <client_side_authoring/>
-                </vertical_demo>
-             """),
+             """<client_side_authoring/>"""),
         ]
