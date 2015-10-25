@@ -1,0 +1,9 @@
+/* CSS for ClientSideAuthoringXBlock */
+
+.client_side_authoring_block .count {
+    font-weight: bold;
+}
+
+.client_side_authoring_block p {
+    cursor: pointer;
+}
