@@ -9,7 +9,8 @@ from xblock.fragment import Fragment
 
 class ClientSideAuthoringXBlock(XBlock):
     """
-    TO-DO: document what your XBlock does.
+    Provides an authoring interface to specify the HTML/CSS/javascript
+    that is shown to students using standard XBlock rendering. 
     """
 
     authored_html = String(
@@ -32,20 +33,17 @@ class ClientSideAuthoringXBlock(XBlock):
 
     def student_view(self, context=None):
         """
-        The primary view of the ClientSideAuthoringXBlock, shown to students
-        when viewing courses.
+        A view which displays the web page that was authored
         """
         frag = Fragment(self.authored_html)
-        frag.add_css(self.resource_string("static/css/client_side_authoring.css"))
-        frag.add_javascript(
-            self.resource_string("static/js/src/client_side_authoring.js"))
+        frag.add_css(self.authored_css)
+        frag.add_javascript(self.authored_javascript)
         frag.initialize_js('ClientSideAuthoringXBlock')
         return frag
 
     def author_view(self, context=None):
         """
-        The authoring view of the ClientSideAuthoringXBlock,
-        shown to authors when they are assembling a course
+        The authoring view which allows authors to write their web page
         """
         html = self.resource_string("static/html/client_side_authoring.html")
         frag = Fragment(html.format(self=self))
@@ -63,8 +61,8 @@ class ClientSideAuthoringXBlock(XBlock):
     @XBlock.json_handler
     def save_authoring(self, data, suffix=''):
         """
-        Saves the 'content' attribute of a form POST request for display as 
-        HTML as part of a webpage
+        Saves the 'html', 'css', and 'javascript' entries in the json dict
+        for display in the student view. 
         """
         self.authored_html = data['html']
         self.authored_css = data['css']
