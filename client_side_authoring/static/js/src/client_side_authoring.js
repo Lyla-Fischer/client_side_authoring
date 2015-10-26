@@ -1,22 +1,37 @@
 /* Javascript for ClientSideAuthoringXBlock. */
 function ClientSideAuthoringXBlock(runtime, element) {
 
-    function updateCount(result) {
-        $('.count', element).text(result.count);
-    }
+    var handlerUrl = runtime.handlerUrl(element, 'save_authoring');
 
-    var handlerUrl = runtime.handlerUrl(element, 'increment_count');
+    var updatePreview = function(data){
+            console.log(data); 
+    };
 
-    $('p', element).click(function(eventObject) {
+    // process the form
+    $('form').submit(function(event) {
+        var formData = {
+            'html'              : $('textarea[name=html]').val(),
+            'css'               : $('textarea[name=css]').val(),
+            'javascript'        : $('textarea[name=javascript]').val()
+        };
+
+        console.log(formData);
+
         $.ajax({
-            type: "POST",
-            url: handlerUrl,
-            data: JSON.stringify({"hello": "world"}),
-            success: updateCount
+            type        : 'POST', 
+            url         : handlerUrl, 
+            data        : JSON.stringify(formData), 
+            dataType    : 'json', 
+            encode      : true,
+            success     : updatePreview
         });
+        // stop the form from submitting the normal way and refreshing the page
+        event.preventDefault();
     });
 
     $(function ($) {
         /* Here's where you'd do things on page load. */
     });
+
+
 }

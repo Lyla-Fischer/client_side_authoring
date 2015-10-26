@@ -3,7 +3,7 @@
 import pkg_resources
 
 from xblock.core import XBlock
-from xblock.fields import Scope, Integer
+from xblock.fields import Scope, Integer, String
 from xblock.fragment import Fragment
 
 
@@ -16,6 +16,14 @@ class ClientSideAuthoringXBlock(XBlock):
         default=unicode(""), scope=Scope.content,
         help="The author-provided HTML to be displayed to the students",
     )
+    authored_css = String(
+        default=unicode(""), scope=Scope.content,
+        help="The author-provided CSS to be displayed to the students",
+    )
+    authored_javascript = String(
+        default=unicode(""), scope=Scope.content,
+        help="The author-provided javascript to be displayed to the students",
+    )
 
     def resource_string(self, path):
         """Handy helper for getting resources from our kit."""
@@ -24,45 +32,50 @@ class ClientSideAuthoringXBlock(XBlock):
 
     def student_view(self, context=None):
         """
-        The primary view of the CustomHtmlXBlock, shown to students
+        The primary view of the ClientSideAuthoringXBlock, shown to students
         when viewing courses.
         """
-        # import pdb; pdb.set_trace()
         frag = Fragment(self.authored_html)
-        frag.add_css(self.resource_string("static/css/custom_html.css"))
+        frag.add_css(self.resource_string("static/css/client_side_authoring.css"))
         frag.add_javascript(
-            self.resource_string("static/js/src/custom_html.js"))
-        frag.initialize_js('CustomHtmlXBlock')
+            self.resource_string("static/js/src/client_side_authoring.js"))
+        frag.initialize_js('ClientSideAuthoringXBlock')
         return frag
 
     def author_view(self, context=None):
         """
-        The authoring view of the CustomHtmlXBlock,
+        The authoring view of the ClientSideAuthoringXBlock,
         shown to authors when they are assembling a course
         """
-        html = self.resource_string("static/html/custom_html_authoring.html")
+        html = self.resource_string("static/html/client_side_authoring.html")
         frag = Fragment(html.format(self=self))
         frag.add_content(self.authored_html)
 
-        frag.add_css(self.resource_string("static/css/custom_html.css"))
+        frag.add_css(self.resource_string("static/css/client_side_authoring.css"))
         frag.add_javascript(
-            self.resource_string("static/js/src/custom_html.js"))
-        frag.add_javascript(
-            self.resource_string("static/js/src/csrf_javascript.js"))
-        frag.add_javascript_url("//tinymce.cachefly.net/4.2/tinymce.min.js")
-        frag.initialize_js('CustomHtmlXBlock')
+            self.resource_string("static/js/src/client_side_authoring.js"))
+        # frag.add_javascript(
+        #     self.resource_string("static/js/src/csrf_javascript.js"))
+        frag.initialize_js('ClientSideAuthoringXBlock')
         return frag
 
-    @XBlock.handler
-    def save_html(self, data, suffix=''):
+
+    @XBlock.json_handler
+    def save_authoring(self, data, suffix=''):
         """
         Saves the 'content' attribute of a form POST request for display as 
         HTML as part of a webpage
         """
-        self.authored_html = data.POST['content']
+        self.authored_html = data['html']
+        self.authored_css = data['css']
+        self.authored_javascript = data['javascript']
 
-        response = HTTPTemporaryRedirect()
-        response.location = data.referrer
+        response = {
+            'html': self.authored_html, 
+            'css':self.authored_css, 
+            'javascript': self.authored_javascript
+        }
+
         return response
 
     @staticmethod
