@@ -41,7 +41,7 @@ class ClientSideAuthoringXBlock(XBlock):
         frag.initialize_js('ClientSideAuthoringXBlock')
         return frag
 
-    def author_view(self, context=None):
+    def studio_view(self, context=None):
         """
         The authoring view which allows authors to write their web page
         """
@@ -50,10 +50,24 @@ class ClientSideAuthoringXBlock(XBlock):
         frag.add_content(self.authored_html)
 
         frag.add_css(self.resource_string("static/css/client_side_authoring.css"))
+
+        frag.add_css(self.resource_string(
+            "static/vender/CodeMirror/lib/codemirror.css"))
+        
+        
+        frag.add_javascript(self.resource_string(
+            "static/vender/CodeMirror/lib/codemirror.js"))
+        frag.add_javascript(self.resource_string(
+            "static/vender/CodeMirror/mode/javascript/javascript.js"))
         frag.add_javascript(
             self.resource_string("static/js/src/client_side_authoring.js"))
-        # frag.add_javascript(
-        #     self.resource_string("static/js/src/csrf_javascript.js"))
+        frag.add_javascript(
+            self.resource_string("static/js/src/csrf_javascript.js"))
+        frag.add_javascript_url(
+            "/static/vender/CodeMirror/mode/html/html.js")
+        frag.add_javascript_url(
+            "/static/vender/CodeMirror/mode/css/css.js")
+
         frag.initialize_js('ClientSideAuthoringXBlock')
         return frag
 

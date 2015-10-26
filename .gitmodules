@@ -1,0 +1,3 @@
+[submodule "client_side_authoring/static/vender/CodeMirror"]
+	path = client_side_authoring/static/vender/CodeMirror
+	url = git@github.com:codemirror/CodeMirror.git
