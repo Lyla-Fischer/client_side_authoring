@@ -52,9 +52,7 @@ class ClientSideAuthoringXBlock(XBlock):
         frag.add_css(self.resource_string("static/css/client_side_authoring.css"))
 
         frag.add_css(self.resource_string(
-            "static/vender/CodeMirror/lib/codemirror.css"))
-        
-        
+            "static/vender/CodeMirror/lib/codemirror.css"))    
         frag.add_javascript(self.resource_string(
             "static/vender/CodeMirror/lib/codemirror.js"))
         frag.add_javascript(self.resource_string(
@@ -63,10 +61,10 @@ class ClientSideAuthoringXBlock(XBlock):
             self.resource_string("static/js/src/client_side_authoring.js"))
         frag.add_javascript(
             self.resource_string("static/js/src/csrf_javascript.js"))
-        frag.add_javascript_url(
-            "/static/vender/CodeMirror/mode/html/html.js")
-        frag.add_javascript_url(
-            "/static/vender/CodeMirror/mode/css/css.js")
+        # frag.add_javascript_url(self.resource_string(
+        #     "/static/vender/CodeMirror/mode/html/html.js"))
+        frag.add_javascript_url(self.resource_string(
+            "/static/vender/CodeMirror/mode/css/css.js"))
 
         frag.initialize_js('ClientSideAuthoringXBlock')
         return frag

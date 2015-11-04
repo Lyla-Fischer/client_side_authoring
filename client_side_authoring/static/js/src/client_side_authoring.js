@@ -30,7 +30,15 @@ function ClientSideAuthoringXBlock(runtime, element) {
     });
 
     $(function ($) {
-        var myCodeMirror = CodeMirror(document.body);
+        var javascript_textarea = CodeMirror.fromTextArea($('textarea[name=javascript]').get(0), {
+            lineNumbers: true
+          });
+        var css_textarea = CodeMirror.fromTextArea($('textarea[name=css]').get(0), {
+            lineNumbers: true
+          });
+        var html_textarea = CodeMirror.fromTextArea($('textarea[name=html]').get(0), {
+            lineNumbers: true
+          });
     });
 
 
