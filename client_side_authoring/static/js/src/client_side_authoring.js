@@ -4,7 +4,10 @@ function ClientSideAuthoringXBlock(runtime, element) {
     var handlerUrl = runtime.handlerUrl(element, 'save_authoring');
 
     var updatePreview = function(data){
-            console.log(data); 
+            $('textarea[name=html]').text(data.html);
+            $('textarea[name=css]').text(data.css);
+            $('textarea[name=javascript]').text(data.javascript);
+            console.log(data);
     };
 
     // process the form
@@ -14,8 +17,6 @@ function ClientSideAuthoringXBlock(runtime, element) {
             'css'               : $('textarea[name=css]').val(),
             'javascript'        : $('textarea[name=javascript]').val()
         };
-
-        console.log(formData);
 
         $.ajax({
             type        : 'POST', 
@@ -29,17 +30,23 @@ function ClientSideAuthoringXBlock(runtime, element) {
         event.preventDefault();
     });
 
-    $(function ($) {
-        var javascript_textarea = CodeMirror.fromTextArea($('textarea[name=javascript]').get(0), {
-            lineNumbers: true
-          });
-        var css_textarea = CodeMirror.fromTextArea($('textarea[name=css]').get(0), {
-            lineNumbers: true
-          });
-        var html_textarea = CodeMirror.fromTextArea($('textarea[name=html]').get(0), {
-            lineNumbers: true
-          });
-    });
+    var javascript_textarea = CodeMirror.fromTextArea($('textarea[name=javascript]').get(0), {
+        mode:  "javascript",
+        lineNumbers: true
+      });
+    console.log(javascript_textarea)
+
+    var css_textarea = CodeMirror.fromTextArea($('textarea[name=css]').get(0), {
+        mode:  "css",
+        lineNumbers: true
+      });
+    console.log(css_textarea)
+    
+    var html_textarea = CodeMirror.fromTextArea($('textarea[name=html]').get(0), {
+        mode:  "xml",
+        lineNumbers: true
+      });
+    console.log(html_textarea)
 
 
 }
