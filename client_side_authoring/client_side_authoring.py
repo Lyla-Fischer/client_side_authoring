@@ -49,11 +49,8 @@ class ClientSideAuthoringXBlock(XBlock):
         frag = Fragment(html.format(self=self))
         frag.add_content(self.authored_html)
 
-        #css
-
+        #adding basic files
         frag.add_css(self.resource_string("static/css/client_side_authoring.css"))
-
-
         frag.add_javascript(
             self.resource_string("static/js/src/client_side_authoring.js"))
 
