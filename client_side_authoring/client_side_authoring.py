@@ -2,6 +2,8 @@
 
 import pkg_resources
 
+from webob.exc import HTTPTemporaryRedirect
+
 from xblock.core import XBlock
 from xblock.fields import Scope, Integer, String
 from xblock.fragment import Fragment
@@ -43,7 +45,16 @@ class ClientSideAuthoringXBlock(XBlock):
 
     def studio_view(self, context=None):
         """
-        The authoring view which allows authors to write their web page
+        Provides a studio_view by returning the flexible raw_view as a resonable default.
+
+        (OpenCraft likes having a studio_view around, but this implementation 
+        has two studio views - raw and wysiwyg.)
+        """
+        return raw_authoring_view(self, context)
+
+    def raw_authoring_view(self, context=None):
+        """
+        A raw authoring view allowing web page writers to edit HTML, CSS, and Javascripts
         """
         html = self.resource_string("static/html/client_side_authoring.html")
         frag = Fragment(html.format(self=self))
@@ -70,6 +81,36 @@ class ClientSideAuthoringXBlock(XBlock):
 
         frag.initialize_js('ClientSideAuthoringXBlock')
         return frag
+
+    def wysiwyg_authoring_view(self, context=None):
+        """
+        Provides a WYSIWYG authoring view for web pages.
+        """
+        html = self.resource_string("static/html/WYSIWYG_authoring.html")
+        frag = Fragment(html.format(self=self))
+        frag.add_content(self.authored_html)
+
+        frag.add_css(self.resource_string("static/css/client_side_authoring.css"))
+        frag.add_javascript(
+            self.resource_string("static/js/src/WYSIWYG_authoring.js"))
+        frag.add_javascript(
+            self.resource_string("static/js/src/csrf_javascript.js"))
+        frag.add_javascript_url("//tinymce.cachefly.net/4.2/tinymce.min.js")
+        frag.initialize_js('CustomHtmlXBlock')
+        return frag
+
+
+    @XBlock.handler
+    def save_html(self, data, suffix=''):
+        """
+        Saves the 'content' attribute of a form POST request for display as 
+        HTML as part of a webpage
+        """
+        self.authored_html = data.POST['content']
+
+        response = HTTPTemporaryRedirect()
+        response.location = data.referrer
+        return response
 
 
     @XBlock.json_handler
