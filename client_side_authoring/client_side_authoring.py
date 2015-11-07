@@ -35,7 +35,7 @@ class ClientSideAuthoringXBlock(XBlock):
 
     def student_view(self, context=None):
         """
-        A view which displays the web page that was authored
+        A view which renders an authored web page
         """
         frag = Fragment(self.authored_html)
         frag.add_css(self.authored_css)
@@ -54,7 +54,7 @@ class ClientSideAuthoringXBlock(XBlock):
 
     def raw_authoring_view(self, context=None):
         """
-        A raw authoring view allowing web page writers to edit HTML, CSS, and Javascripts
+        A raw authoring view allowing web page writers to edit HTML, CSS, and Javascript
         """
         html = self.resource_string("static/html/client_side_authoring.html")
         frag = Fragment(html.format(self=self))
