@@ -52,13 +52,13 @@ class ClientSideAuthoringXBlock(XBlock):
         """
         return raw_authoring_view(self, context)
 
+
     def raw_authoring_view(self, context=None):
         """
         A raw authoring view allowing web page writers to edit HTML, CSS, and Javascript
         """
         html = self.resource_string("static/html/client_side_authoring.html")
         frag = Fragment(html.format(self=self))
-        frag.add_content(self.authored_html)
 
         #adding basic files
         frag.add_css(self.resource_string("static/css/client_side_authoring.css"))
@@ -82,13 +82,13 @@ class ClientSideAuthoringXBlock(XBlock):
         frag.initialize_js('ClientSideAuthoringXBlock')
         return frag
 
+
     def wysiwyg_authoring_view(self, context=None):
         """
         Provides a WYSIWYG authoring view for web pages.
         """
         html = self.resource_string("static/html/WYSIWYG_authoring.html")
         frag = Fragment(html.format(self=self))
-        frag.add_content(self.authored_html)
 
         frag.add_css(self.resource_string("static/css/client_side_authoring.css"))
         frag.add_javascript(
@@ -96,7 +96,7 @@ class ClientSideAuthoringXBlock(XBlock):
         frag.add_javascript(
             self.resource_string("static/js/src/csrf_javascript.js"))
         frag.add_javascript_url("//tinymce.cachefly.net/4.2/tinymce.min.js")
-        frag.initialize_js('CustomHtmlXBlock')
+        frag.initialize_js('WysiwygAuthoring')
         return frag
 
 

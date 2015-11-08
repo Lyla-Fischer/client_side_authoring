@@ -1,4 +1,3 @@
-/* Javascript for ClientSideAuthoringXBlock. */
 function ClientSideAuthoringXBlock(runtime, element) {
 
     var javascript_textarea = CodeMirror.fromTextArea($('textarea[name=javascript]').get(0), {
@@ -43,6 +42,4 @@ function ClientSideAuthoringXBlock(runtime, element) {
         // stop the form from submitting the normal way and refreshing the page
         event.preventDefault();
     });
-
-
 }

@@ -1,5 +1,4 @@
-/* Javascript for CustomHtmlXBlock. */
-function CustomHtmlXBlock(runtime, element) {
+function WysiwygAuthoring(runtime, element) {
     
     var saveUrl = runtime.handlerUrl(element, 'save_html');
 
