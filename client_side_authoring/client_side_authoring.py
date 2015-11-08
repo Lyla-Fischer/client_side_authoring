@@ -29,7 +29,7 @@ class ClientSideAuthoringXBlock(XBlock):
     )
 
     student_data = String(
-        default=unicode(""), scope=Scope.content,
+        default=unicode(""), scope=Scope.user_state,
         help="Student data stored server-side as a service for authors",
     )
 
