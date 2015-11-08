@@ -28,10 +28,16 @@ class ClientSideAuthoringXBlock(XBlock):
         help="The author-provided javascript to be displayed to the students",
     )
 
+    student_data = String(
+        default=unicode(""), scope=Scope.content,
+        help="Student data stored server-side as a service for authors",
+    )
+
     def resource_string(self, path):
         """Handy helper for getting resources from our kit."""
         data = pkg_resources.resource_string(__name__, path)
         return data.decode("utf8")
+
 
     def student_view(self, context=None):
         """
@@ -39,9 +45,12 @@ class ClientSideAuthoringXBlock(XBlock):
         """
         frag = Fragment(self.authored_html)
         frag.add_css(self.authored_css)
-        frag.add_javascript(self.authored_javascript)
-        frag.initialize_js('ClientSideAuthoringXBlock')
+        frag.add_javascript(self.resource_string("/static/js/src/provide_services.js"))
+        #TODO: This puts a variable in the global namespace, but hopefully future versions of XBlock will have better security around that. 
+        frag.add_javascript("var authored_javascript = '" + self.authored_javascript + "';") 
+        frag.initialize_js('ProvideServices')
         return frag
+
 
     def studio_view(self, context=None):
         """
@@ -95,6 +104,10 @@ class ClientSideAuthoringXBlock(XBlock):
             self.resource_string("static/js/src/WYSIWYG_authoring.js"))
         frag.add_javascript(
             self.resource_string("static/js/src/csrf_javascript.js"))
+        # TODO: This uses an external library rather than hosting it as part of 
+        # the XBlock, which will make it responsive to a 3rd party's schedule 
+        # for changes. Hopefully future versions of XBlock will allow packaging
+        # of external libraries that have more than one file associated with them.
         frag.add_javascript_url("//tinymce.cachefly.net/4.2/tinymce.min.js")
         frag.initialize_js('WysiwygAuthoring')
         return frag
@@ -110,6 +123,20 @@ class ClientSideAuthoringXBlock(XBlock):
 
         response = HTTPTemporaryRedirect()
         response.location = data.referrer
+        return response
+
+
+    @XBlock.json_handler
+    def save_student_data(self, data, suffix=''):
+        """
+        Saves arbitrary student data, as a server-side service to authors
+        """
+        self.student_data = data
+
+        response = {
+            'student_data' : self.student_data
+        }
+
         return response
 
 
@@ -130,6 +157,7 @@ class ClientSideAuthoringXBlock(XBlock):
         }
 
         return response
+
 
     @staticmethod
     def workbench_scenarios():
