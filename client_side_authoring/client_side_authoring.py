@@ -141,6 +141,21 @@ class ClientSideAuthoringXBlock(XBlock):
 
 
     @XBlock.json_handler
+    def get_student_data(self, data, suffix=''):
+        """
+        Gets the student data that was stored as a server-side service to authors
+
+        data is currently an unused parameter
+        """
+
+        response = {
+            'student_data' : self.student_data
+        }
+
+        return response
+
+
+    @XBlock.json_handler
     def save_authoring(self, data, suffix=''):
         """
         Saves the 'html', 'css', and 'javascript' entries in the json dict
