@@ -4,6 +4,8 @@ import pkg_resources
 
 from webob.exc import HTTPTemporaryRedirect
 
+from mako.template import Template
+
 from xblock.core import XBlock
 from xblock.fields import Scope, Integer, String
 from xblock.fragment import Fragment
@@ -56,9 +58,12 @@ class ClientSideAuthoringXBlock(XBlock):
         """
         A raw authoring view allowing web page writers to edit HTML, CSS, and Javascript
         """
-        html = self.resource_string("static/html/client_side_authoring.html")
-        frag = Fragment(html.format(self=self))
-
+        html = self.resource_string("static/html/client_side_authoring.mako")
+        frag = Fragment(Template(html).render(
+                            authored_html=self.authored_html,
+                            authored_css=self.authored_css, 
+                            authored_javascript = self.authored_javascript))
+        
         #adding basic files
         frag.add_css(self.resource_string("static/css/client_side_authoring.css"))
         frag.add_javascript(
