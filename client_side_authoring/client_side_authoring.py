@@ -91,8 +91,13 @@ class ClientSideAuthoringXBlock(XBlock):
         """
         Provides a WYSIWYG authoring view for web pages.
         """
-        html = self.resource_string("static/html/WYSIWYG_authoring.html")
-        frag = Fragment(html.format(self=self))
+
+        html = self.resource_string("static/html/WYSIWYG_authoring.mako")
+        student_frag = self.student_view()
+        student_html = student_frag.head_html() + student_frag.body_html()
+        frag = Fragment(Template(html).render(
+                            authored_content = student_html))
+
 
         frag.add_css(self.resource_string("static/css/client_side_authoring.css"))
         frag.add_javascript(

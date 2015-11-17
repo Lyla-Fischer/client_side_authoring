@@ -7,11 +7,11 @@ This is a basic proof of concept, which provides the following:
 * a raw interface for people who know HTML/CSS/Javascript and who want to control the page in ways for which the wysiwyg interface doesn't provide a button
 * a viewing interface for the student-facing result of all that authoring work.
 * a callback for getting and setting student state on the server-side
+* Improving the GUI so that the authoring interfaces are pre-seeded with the current authored state
 
 
 There's still a lot of work to be done:
 
-* Improving the GUI so that the authoring interfaces are pre-seeded with the current authored state
 * Integrating the authoring GUI into studio and other aspects of edx-platform
 * Improving security so that author-provided client-side code is isolated from concurrently displayed client-side code (may involve contributions to XBlock)
 * Providing a client-side accessible callback into a grading system, allowing this XBlock to compete with JSInput 
