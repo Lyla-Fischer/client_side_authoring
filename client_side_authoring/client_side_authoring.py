@@ -52,16 +52,6 @@ class ClientSideAuthoringXBlock(XBlock):
         return frag
 
 
-    def studio_view(self, context=None):
-        """
-        Provides a studio_view by returning the flexible raw_view as a resonable default.
-
-        (OpenCraft likes having a studio_view around, but this implementation 
-        has two studio views - raw and wysiwyg.)
-        """
-        return raw_authoring_view(self, context)
-
-
     def raw_authoring_view(self, context=None):
         """
         A raw authoring view allowing web page writers to edit HTML, CSS, and Javascript
@@ -112,6 +102,14 @@ class ClientSideAuthoringXBlock(XBlock):
         frag.initialize_js('WysiwygAuthoring')
         return frag
 
+    def studio_view(self, context=None):
+        """
+        Provides a studio_view by returning the flexible raw_view as a resonable default.
+
+        (OpenCraft likes having a studio_view around, but this implementation 
+        has two studio views - raw and wysiwyg.)
+        """
+        return self.raw_authoring_view(context)
 
     @XBlock.handler
     def save_html(self, data, suffix=''):
