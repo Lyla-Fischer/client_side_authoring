@@ -104,11 +104,8 @@ class ClientSideAuthoringXBlock(XBlock):
             self.resource_string("static/js/src/WYSIWYG_authoring.js"))
         frag.add_javascript(
             self.resource_string("static/js/src/csrf_javascript.js"))
-        # TODO: This uses an external library rather than hosting it as part of 
-        # the XBlock, which will make it responsive to a 3rd party's schedule 
-        # for changes. Hopefully future versions of XBlock will allow packaging
-        # of external libraries that have more than one file associated with them.
-        frag.add_javascript_url("//tinymce.cachefly.net/4.2/tinymce.min.js")
+        local_resource_url=self.runtime.local_resource_url(self, 'public/tinymce/js/tinymce/tinymce.min.js')
+        frag.add_javascript_url(local_resource_url)
         frag.initialize_js('WysiwygAuthoring')
         return frag
 
