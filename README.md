@@ -7,7 +7,6 @@ This is a basic proof of concept, which provides the following:
 * a raw interface for people who know HTML/CSS/Javascript and who want to control the page in ways for which the wysiwyg interface doesn't provide a button
 * a viewing interface for the student-facing result of all that authoring work.
 * a callback for getting and setting student state on the server-side
-* Improving the GUI so that the authoring interfaces are pre-seeded with the current authored state
 
 
 There's still a lot of work to be done:
