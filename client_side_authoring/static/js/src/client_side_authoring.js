@@ -1,16 +1,16 @@
 function ClientSideAuthoringXBlock(runtime, element) {
 
-    var javascript_textarea = CodeMirror.fromTextArea($('textarea[name=javascript]').get(0), {
+    var javascript_textarea = CodeMirror.fromTextArea($('textarea[name=javascript]', element).get(0), {
         mode:  "javascript",
         lineNumbers: true
       });
 
-    var css_textarea = CodeMirror.fromTextArea($('textarea[name=css]').get(0), {
+    var css_textarea = CodeMirror.fromTextArea($('textarea[name=css]', element).get(0), {
         mode:  "css",
         lineNumbers: true
       });
     
-    var html_textarea = CodeMirror.fromTextArea($('textarea[name=html]').get(0), {
+    var html_textarea = CodeMirror.fromTextArea($('textarea[name=html]', element).get(0), {
         mode:  "xml",
         lineNumbers: true
       });
@@ -26,9 +26,9 @@ function ClientSideAuthoringXBlock(runtime, element) {
 
     $('form').submit(function(event) {
         var formData = {
-            'html'              : $('.html_editor').val(),
-            'css'               : $('.css_editor').val(),
-            'javascript'        : $('.javascript_editor').val()
+            'html'              : $('.html_editor', element).val(),
+            'css'               : $('.css_editor', element).val(),
+            'javascript'        : $('.javascript_editor', element).val()
         };
 
         $.ajax({
